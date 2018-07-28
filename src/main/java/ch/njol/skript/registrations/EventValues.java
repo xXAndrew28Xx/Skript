@@ -20,7 +20,9 @@
 package ch.njol.skript.registrations;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -211,7 +213,20 @@ public class EventValues {
 			return getEventValueGetter(e, c, 0, false);
 		return null;
 	}
-	
+
+	public static Optional<String> checkExcludes(EventValueExpression evExpr, Class<? extends Event>... events) {
+		final List<EventValueInfo<?, ?>> eventValues = getEventValuesList(evExpr.getTime());
+		Class<?> c = evExpr.getReturnType();
+		for (Class<? extends Event> e : events) {
+			for (final EventValueInfo<?, ?> ev : eventValues) {
+				if (((ev.event.isAssignableFrom(e)) || e.isAssignableFrom(ev.event)) && c.isAssignableFrom(ev.c)) {
+					checkExcludes(ev, e);
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
 	private static boolean checkExcludes(final EventValueInfo<?, ?> ev, final Class<? extends Event> e) {
 		final Class<? extends Event>[] excl = ev.exculdes;
 		if (excl == null)
