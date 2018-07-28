@@ -251,7 +251,7 @@ public class SkriptParser {
 										if (expr instanceof EventValueExpression) {
 											Class<? extends Event>[] currentEvents = ScriptLoader.getCurrentEvents();
 											if (currentEvents != null) {
-												Optional<String> error = EventValues.checkExcludes((EventValueExpression) expr, currentEvents);
+												EventValues.checkExcludes((EventValueExpression) expr, currentEvents);
 											}
 										}
 										if (!expr.init())

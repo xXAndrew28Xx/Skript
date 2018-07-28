@@ -214,17 +214,17 @@ public class EventValues {
 		return null;
 	}
 
-	public static Optional<String> checkExcludes(EventValueExpression evExpr, Class<? extends Event>... events) {
+	public static boolean heckExcludes(EventValueExpression evExpr, Class<? extends Event>... events) {
 		final List<EventValueInfo<?, ?>> eventValues = getEventValuesList(evExpr.getTime());
 		Class<?> c = evExpr.getReturnType();
 		for (Class<? extends Event> e : events) {
 			for (final EventValueInfo<?, ?> ev : eventValues) {
 				if (((ev.event.isAssignableFrom(e)) || e.isAssignableFrom(ev.event)) && c.isAssignableFrom(ev.c)) {
-					checkExcludes(ev, e);
+					return checkExcludes(ev, e);
 				}
 			}
 		}
-		return Optional.empty();
+		return true;
 	}
 
 	private static boolean checkExcludes(final EventValueInfo<?, ?> ev, final Class<? extends Event> e) {
